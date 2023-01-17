@@ -69,6 +69,27 @@ services:
     volumes:
       - fusionauth_config:/usr/local/fusionauth/config
 
+  nginx:
+    image: nginx:1.19.2
+    # wait for fusionauth container or else nginx will fail to resolve upstream resources
+    depends_on:
+      - fusionauth
+    networks:
+      - db
+    restart: unless-stopped
+    volumes:
+      - ./http_default.conf:/etc/nginx/conf.d/http_default.conf
+      - letsencrypt:/etc/letsencrypt
+      - certbot_www:./data/certbot
+    ports:
+      - 80:80
+
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - letsencrypt:/etc/letsencrypt
+      - certbot_www:./data/certbot
+
 networks:
   db_net:
     driver: bridge
@@ -79,3 +100,5 @@ volumes:
   db_data:
   fusionauth_config:
   search_data:
+  letsencrypt:
+  certbot_www:
