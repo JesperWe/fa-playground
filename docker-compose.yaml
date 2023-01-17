@@ -74,8 +74,6 @@ services:
     # wait for fusionauth container or else nginx will fail to resolve upstream resources
     depends_on:
       - fusionauth
-    networks:
-      - db
     restart: unless-stopped
     volumes:
       - ./http_default.conf:/etc/nginx/conf.d/http_default.conf
@@ -83,9 +81,10 @@ services:
       - certbot_www:./data/certbot
     ports:
       - 80:80
+      - 443:443
 
   certbot:
-    image: certbot/certbot:latest
+    image: certbot/certbot
     volumes:
       - letsencrypt:/etc/letsencrypt
       - certbot_www:./data/certbot
