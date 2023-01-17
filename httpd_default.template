@@ -39,13 +39,12 @@ upstream fusionauth {
 }
 
 server {
-	listen 80;
-	server_name fusionauth-nginx.example.com;
-	proxy_set_header Host $host;
-	proxy_set_header X-Forwarded-Host $host;
-	proxy_set_header X-Forwarded-Proto "http";
+    if ($host = ${HOSTNAME}) {
+        return 301 https://$host$request_uri;
+    }
 
-	location / {
-		proxy_pass      http://fusionauth;
-	}
+	listen 80;
+	listen [::]:80;
+    server_name ${HOSTNAME}
+    return 404;
 }

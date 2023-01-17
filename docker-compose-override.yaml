@@ -4,7 +4,7 @@ services:
 
   fusionauth:
     environment:
-      FUSIONAUTH_APP_URL: http://fusionauth-nginx.example.com
+      FUSIONAUTH_APP_URL: https://${HOSTNAME}
 
   nginx:
     image: nginx:1.19.2
