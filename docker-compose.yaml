@@ -72,8 +72,6 @@ services:
   nginx:
     image: nginx:1.19.2
     # wait for fusionauth container or else nginx will fail to resolve upstream resources
-    depends_on:
-      - fusionauth
     restart: unless-stopped
     volumes:
       - ./http_default.conf:/etc/nginx/conf.d/http_default.conf
