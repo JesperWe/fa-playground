@@ -9,7 +9,7 @@ Tested on Ubuntu 22.04 LTS server VM instance with Docker & docker-compose insta
  
 - `sudo usermod -aG docker ${USER}`
 
-- `envsubst <http_default.template >http_default.conf`
+- `(source .env; envsubst '$HOSTNAME' <http_default.template >http_default.conf)`
 
 - `chmod 755 ./init-letsencrypt.sh; sudo ./init-letsencrypt.sh`
  
