@@ -37,7 +37,7 @@ echo "### Creating dummy certificate for $domains ..."
 path="/etc/letsencrypt/live/$domains"
 
 docker-compose run --rm --entrypoint "\
-  mkdir -p "$data_path/conf/live/$domains"" certbot
+  mkdir -p "$path"" certbot
 
 docker-compose run --rm --entrypoint "\
   openssl req -x509 -nodes -newkey rsa:$rsa_key_size -days 1\
