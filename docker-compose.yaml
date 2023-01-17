@@ -78,7 +78,7 @@ services:
     volumes:
       - ./http_default.conf:/etc/nginx/conf.d/http_default.conf
       - letsencrypt:/etc/letsencrypt
-      - certbot_www:./data/certbot
+      - certbot_www:/var/www/certbot
     ports:
       - 80:80
       - 443:443
@@ -87,7 +87,7 @@ services:
     image: certbot/certbot
     volumes:
       - letsencrypt:/etc/letsencrypt
-      - certbot_www:./data/certbot
+      - certbot_www:/var/www/certbot
 
 networks:
   db_net:
