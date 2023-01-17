@@ -21,30 +21,37 @@ ssl_prefer_server_ciphers on;
 ssl_session_cache shared:SSL:50m;
 ssl_session_timeout 5m;
 
-# force all connections over TLS (uncomment if HTTPS is desired)
-#add_header Strict-Transport-Security max-age=15768000;
-# Other SSL-related settings
-# SSL CERT (wildcard for all servers)
-#ssl_certificate		/root/letsencrypt/live/example.com/fullchain.pem;
-#ssl_certificate_key	/root/letsencrypt/live/example.com/privkey.pem;
-
-## client certificate
-#ssl_client_certificate	/etc/nginx/client_certs/certs.crt;
-#ssl_verify_client optional;
-# revocation list for client certs
-#ssl_crl	/etc/nginx/client_certs/certs.pem;
-
 upstream fusionauth {
 	server fusionauth:9011;
 }
 
 server {
-    if ($host = ${HOSTNAME}) {
-        return 301 https://$host$request_uri;
+  listen 80;
+  listen [::]:80;
+  server_name ${HOSTNAME};
+  location /.well-known/acme-challenge/ {
+    root /var/www/certbot;
+  }
+
+  location / {
+      return 301 https://$host$request_uri;
+  }
+}
+
+server {
+    server_name ${HOSTNAME};
+
+    location / {
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_pass http://$fusionauth;
     }
 
-	listen 80;
-	listen [::]:80;
-    server_name ${HOSTNAME}
-    return 404;
+    listen [::]:443 ssl ipv6only=on;
+    listen 443 ssl;
+    ssl_certificate /etc/letsencrypt/live/${HOSTNAME}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${HOSTNAME}/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 }

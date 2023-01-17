@@ -16,5 +16,17 @@ services:
     restart: unless-stopped
     volumes:
       - ./http_default.conf:/etc/nginx/conf.d/http_default.conf
+      - letsencrypt:/etc/letsencrypt
+      - certbot_www:./data/certbot
     ports:
       - 80:80
+
+  certbot:
+    image: certbot/certbot:latest
+    volumes:
+      - letsencrypt:/etc/letsencrypt
+      - certbot_www:./data/certbot
+
+volumes:
+  letsencrypt:
+  certbot_www:
