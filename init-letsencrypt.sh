@@ -4,6 +4,8 @@ set -a
 source <(cat .env | sed -e '/^#/d;/^\s*$/d' -e "s/'/'\\\''/g" -e "s/=\(.*\)/='\1'/g")
 set +a
 
+mkdir -p  /etc/letsencrypt/live/${DOMAINS}
+
 if ! [ -x "$(command -v docker-compose)" ]; then
   echo 'Error: docker-compose is not installed.' >&2
   exit 1
