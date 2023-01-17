@@ -69,12 +69,26 @@ services:
     volumes:
       - fusionauth_config:/usr/local/fusionauth/config
 
+  nginx-setup:
+    image: nginx:stable
+    # Only run during setup
+    profiles:
+      - setup
+    volumes:
+      - letsencrypt:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    ports:
+      - 80:80
+      - 443:443
+
   nginx:
-    image: nginx:1.19.2
+    image: nginx:stable
     # wait for fusionauth container or else nginx will fail to resolve upstream resources
+    depends_on:
+      - fusionauth
     restart: unless-stopped
     volumes:
-      - ./http_default.conf:/etc/nginx/conf.d/http_default.conf
+      - ./http_default.conf:/etc/nginx/conf.d/default.conf
       - letsencrypt:/etc/letsencrypt
       - certbot_www:/var/www/certbot
     ports:

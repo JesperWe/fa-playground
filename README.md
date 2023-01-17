@@ -6,11 +6,11 @@ Tested on Ubuntu 22.04 LTS server VM instance with Docker & docker-compose insta
 -  `cp .env.example .env` and fill in.
  
 - `sudo usermod -aG docker ${USER}`
- 
+
+- `envsubst <http_default.template >http_default.conf`
+
 - `chmod 755 ./init-letsencrypt.sh; sudo ./init-letsencrypt.sh`
  
 - Make sure DNS A record for $HOSTNAME is set to correct IP
-
-- `envsubst <http_default.template >http_default.conf`
 
 - `docker-compose up -d`
