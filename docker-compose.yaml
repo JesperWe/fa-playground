@@ -37,6 +37,8 @@ services:
     networks:
       - fa_net
     restart: unless-stopped
+    logging:
+      driver: none
     ulimits:
       memlock:
         soft: -1
