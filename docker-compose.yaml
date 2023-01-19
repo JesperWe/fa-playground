@@ -33,7 +33,7 @@ services:
       test: [ "CMD", "curl",  "--fail" ,"--write-out", "'HTTP %{http_code}'", "--silent", "--output", "/dev/null", "http://localhost:9200/" ]
       interval: 5s
       timeout: 20s
-      retries: 5
+      retries: 20
     networks:
       - fa_net
     restart: unless-stopped
@@ -62,7 +62,6 @@ services:
       FUSIONAUTH_APP_URL: https://${HOSTNAME}
       SEARCH_SERVERS: http://search:9200
       SEARCH_TYPE: elasticsearch
-
     networks:
       - fa_net
     restart: unless-stopped
@@ -70,6 +69,13 @@ services:
       - 9011:9011
     volumes:
       - fusionauth_config:/usr/local/fusionauth/config
+
+  nginx-debug:
+    image: nginx:stable
+    networks:
+      - fa_net
+    profiles:
+      - debug
 
   nginx-setup:
     image: nginx:stable
@@ -85,14 +91,13 @@ services:
 
   nginx:
     image: nginx:stable
-    # wait for fusionauth container or else nginx will fail to resolve upstream resources
     depends_on:
       - fusionauth
     restart: unless-stopped
     networks:
       - fa_net
     volumes:
-      - ./http_default.conf:/etc/nginx/conf.d/default.conf
+      - ./http_default.conf:/etc/nginx/conf.d/httpd.conf
       - letsencrypt:/etc/letsencrypt
       - certbot_www:/var/www/certbot
     ports:
