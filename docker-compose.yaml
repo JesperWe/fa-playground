@@ -97,7 +97,7 @@ services:
     networks:
       - fa_net
     volumes:
-      - ./http_default.conf:/etc/nginx/conf.d/httpd.conf
+      - ./http_default.conf:/etc/nginx/conf.d/fusionauth.conf
       - letsencrypt:/etc/letsencrypt
       - certbot_www:/var/www/certbot
     ports:
